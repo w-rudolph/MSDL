@@ -1,0 +1,35 @@
+.msdl-select{
+  position: relative;
+}
+.msdl-container{
+  position: absolute;
+  border: 1px solid gray;
+  border-top: none;
+}
+.msdl-content{
+  overflow-y: auto;
+}
+
+.msdl-top{
+  border-bottom: 1px solid #AAA1A1;
+  position: relative;
+  background: #ECE9E9;
+}
+.msdl-ok{
+  float: right;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.msdl-hidden{
+  display: none;
+}
+.msdl-item{
+  margin-top: 2px;
+  border-top: 1px solid #444;
+}
+.msdl-item-first{
+  border-top: none;
+}
+.msdl-selected{
+  background: #F0EC84;
+}
