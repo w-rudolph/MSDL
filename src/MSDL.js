@@ -1,4 +1,4 @@
-﻿(function ($){
+(function ($){
   $.fn.extend({
      MSDL: function(options){
 		 //settings
@@ -16,7 +16,7 @@
 			 classicModel: true
 		 };
 		 options = $.extend(_defaults, options);
-     
+         if(options.data.length < options.displayNum)  options.displayNum = options.data.length;
 		 //layout
 		 var _layoutinit = function(obj){
 			var $this = $(obj),
@@ -34,12 +34,8 @@
 			
 			for(var i = 0; i < count; i++){
 			   var $list = '';
-			   if(options.classicModel){
-				    $list = $('<div class="msdl-item msdl-item-'+(i+1)+'" ><input type="checkbox" class="msdl-item-box" value='+options.data[i]+' /><span>'+options.data[i]+'</span><br></div>');
-					
-			   }else{
-				   $list = '<div class="msdl-item"><span>options.data[i]</span></div>'; 
-			   }
+			    
+			   $list = $('<div class="msdl-item msdl-item-'+(i+1)+'" ><input type="checkbox" class="msdl-item-box" value='+options.data[i]+' /><span>'+options.data[i]+'</span><br></div>'); 
 			   if(i == 0) $list.addClass('msdl-item-first');
 			   if(i == count-1)  $list.addClass('msdl-item-last');
 			   $list.appendTo($content);
@@ -70,6 +66,7 @@
 				$ok = $('.msdl-ok',  $this),
 				$content = $('.msdl-top',  $this),
 				$boxes = $('.msdl-item-box',  $this),
+				$items = $('.msdl-item', $this),
 				$all = $('.msdl-selectAll',  $this);
 				
 		    $container.css({'min-width': $ipt.width()+'px', 'position': 'absolute', 'top': $ipt.outerHeight()+'px'});
@@ -78,27 +75,25 @@
 			$ipt.on('click' , function(){$container.toggleClass('msdl-hidden')});
 			$ok.on('click' , function(){$container.addClass('msdl-hidden')});
 			$content.css('height', $('.msdl-item', $this).outerHeight*options.displayNum);
-			if(options.classicModel){
-				$this.addClass('msdl-select-classic');
 				// select All
-				$all.on('click', function(){
+			$all.on('click', function(){
 					var _datas = [];
-					if($(this).is(':checked')) $boxes.each(function(){$(this).parent().toggleClass('msdl-selected'); $(this)[0].checked = 'checked';_datas.push($(this).val())})
-					else $boxes.each(function(){$(this)[0].checked = ''; _datas = [];});
+					if($(this).is(':checked')) $boxes.each(function(){$(this).parent().addClass('msdl-selected');$(this)[0].checked = 'checked';_datas.push($(this).val())})
+					else $boxes.each(function(){$(this).parent().removeClass('msdl-selected');$(this)[0].checked = ''; _datas = [];});
 					$ipt.val(_datas.join(';')); 	 
-				});
-				
-				//each list click
-				$boxes.on('click', function(){
-					var $_boxes = $('.msdl-item-box:checked',  $this);
-					var _datas = [];
-					$(this).parent().toggleClass('msdl-selected');
+			});
+			//each list click
+		    $items.on('click', function(){
+					var $_boxes = $('.msdl-item-box:checked',  $this),
+					   _datas = [],
+					   $_item = $(this).find('.msdl-item-box');
+					if($_item.is(':checked')){$(this).addClass('msdl-selected');$_item[0].checked = 'checked'}
+					else {$(this).removeClass('msdl-selected');$_item[0].checked = ''}
 					$_boxes.each(function(){_datas.push($(this).val())});
 					$all[0].checked = ($_boxes.length === options.data.length) ? 'checked' : '';
 				    $ipt.val(_datas.join(';')); 	
-				});
-
-			}
+			});		
+				 	
 		 }; 
 		 //do init
 		 return this.each(function(){
